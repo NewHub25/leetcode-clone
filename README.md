@@ -1,40 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LeetClone
+
+## Description
+
+LeetClone is a self-directed learning project focused on building a LeetCode clone using modern web technologies. The primary purpose is to gain hands-on experience with React, Next.js, TypeScript, Tailwind CSS, and Firebase, creating an efficient and interactive coding challenges platform.
+
+## Features
+
+- **User Authentication:** Implement a secure authentication system using Firebase Authentication to allow users to create accounts, log in, and track their progress.
+
+- **Coding Challenges:** Provide a diverse collection of coding challenges with varying difficulty levels, creating a comprehensive set similar to LeetCode.
+
+- **Code Editor Integration:** Seamless integration of a code editor, such as Monaco Editor, enabling users to solve coding challenges directly within the platform.
+
+- **Real-time Evaluation:** Implement a real-time code evaluation system using Firebase Cloud Functions to provide instant feedback on user-submitted solutions.
+
+- **User Profile:** Create user profiles with Firebase Firestore to showcase achievements, completed challenges, and overall progress.
+
+## Technologies Used
+
+- **React:** Build the user interface and manage the application's state efficiently.
+
+- **Next.js:** Leverage the power of Next.js for server-side rendering, routing, and optimizing the application for production.
+
+- **TypeScript:** Enhance code maintainability and developer experience by using TypeScript for static typing.
+
+- **Tailwind CSS:** Utilize a utility-first CSS framework to rapidly style the user interface and maintain a clean, responsive design.
+
+- **Firebase:** Leverage Firebase services, including Authentication for user management and Firestore for real-time database storage.
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repository:** `git clone https://github.com/NewHub25/leetcode-clone`
+2. **Install dependencies:** `npm install`
+3. **Configure Firebase settings:** Set up authentication and Firestore.
+4. **Run the development server:** `npm run dev`
+5. **Access the application:** Visit [http://localhost:3000](http://localhost:3000)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Roadmap
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Version 1.0.0:** Basic functionality with user authentication, coding challenges, and real-time evaluation.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- **Version 2.0.0:** Enhanced user profiles, leaderboards, and additional features for a richer user experience.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- **Future Updates:** Regularly update the platform with new challenges, improvements, and community-driven features.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Contributing
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Contributions are welcome! If you'd like to contribute to LeetClone, please follow our [contribution guidelines](CONTRIBUTING.md).
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
+This project is licensed under the [MIT License](LICENSE).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Acknowledgments
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Inspired by LeetCode and the programming community.
+- Special thanks to the React, Next.js, TypeScript, Tailwind CSS, and Firebase communities for their invaluable resources and support.
