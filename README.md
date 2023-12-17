@@ -46,7 +46,7 @@ LeetClone is a self-directed learning project focused on building a LeetCode clo
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute to LeetClone, please follow our [contribution guidelines](CONTRIBUTING.md).
+Contributions are welcome! If you'd like to contribute to LeetClone, please follow our [contribution guidelines](./CONTRIBUTING.md).
 
 ## License
 
