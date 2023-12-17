@@ -1,17 +1,51 @@
 import { authModalState } from "@/atoms/auth-modal-atom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
+import { useRouter } from "next/router";
 
 type SignUpProps = {};
 
 const SignUp: React.FC<SignUpProps> = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
+  const [inputs, setInputs] = useState({
+    email: "",
+    displayName: "",
+    password: "",
+  });
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+  const router = useRouter();
+
   const handleClick = () => {
     setAuthModalState((prev) => ({ ...prev, type: "login" }));
   };
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+  const handleRegister = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputs.email || !inputs.displayName || !inputs.password)
+      return alert("Please fill all fields");
+    try {
+      const newUser = await createUserWithEmailAndPassword(
+        inputs.email,
+        inputs.password
+      );
+      if (!newUser) return;
+      router.push("/");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (error) alert(error.message);
+  }, [error]);
 
   return (
-    <form className="space-y-6 px-6 pb-4">
+    <form className="space-y-6 px-6 pb-4" onSubmit={handleRegister}>
       <h3 className="text-xl font-medium text-white">Register to LeetClone</h3>
       <div>
         <label
@@ -21,6 +55,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           Email
         </label>
         <input
+          onChange={handleChangeInput}
           type="email"
           name="email"
           id="email"
@@ -37,6 +72,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           Display name
         </label>
         <input
+          onChange={handleChangeInput}
           type="displayName"
           name="displayName"
           id="displayName"
@@ -53,6 +89,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           Password
         </label>
         <input
+          onChange={handleChangeInput}
           type="password"
           name="password"
           id="password"
@@ -62,11 +99,12 @@ const SignUp: React.FC<SignUpProps> = () => {
         />
       </div>
       <button
+        disabled={loading}
         type="submit"
         className="w-full text-white focus:ring-blue-300 font-medium rounded-lg
         text-sm px-5 py-2.5 text-center bg-brand-orange hover:bg-brand-orange-s"
       >
-        Register
+        {loading ? "Registering..." : "Register"}
       </button>
       <div className="text-sm font-medium text-gray-500">
         Have an account?{" "}
@@ -78,3 +116,9 @@ const SignUp: React.FC<SignUpProps> = () => {
   );
 };
 export default SignUp;
+
+/**
+ * ejemplo@gmail.com
+ * Julio Torres
+ * 12345678
+ */
