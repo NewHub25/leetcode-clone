@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { IoClose } from "react-icons/io5";
 import { useRecoilValue } from "recoil";
 import Login from "./login";
@@ -6,16 +6,12 @@ import SignUp from "./sign-up";
 import ResetPassword from "./reset-password";
 import { authModalState } from "@/atoms/auth-modal-atom";
 import useCloseModal from "@/hooks/use-close-modal";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 type AuthModalProps = {};
 
 const AuthModal: React.FC<AuthModalProps> = () => {
   const authModalValue = useRecoilValue(authModalState);
   const closeModal = useCloseModal();
-  const [user, loading, error] = useAuthState(auth, options);
-
-  useEffect();
 
   return (
     <>
