@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 export default function useCloseModal() {
-  const setAuthModal = useSetRecoilState(authModalState); 7
+  const setAuthModal = useSetRecoilState(authModalState);
 
   const closeModal = () => {
     setAuthModal(prev => ({ ...prev, isOpen: false, type: 'login' }));
