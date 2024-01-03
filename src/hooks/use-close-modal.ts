@@ -6,7 +6,7 @@ export default function useCloseModal() {
   const setAuthModal = useSetRecoilState(authModalState);
 
   const closeModal = () => {
-    setAuthModal(prev => ({ ...prev, isOpen: false, type: 'login' }));
+    setAuthModal(prev => ({ isOpen: false, type: 'login' }));
   }
 
   useEffect(() => {
