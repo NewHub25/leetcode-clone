@@ -5,6 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { authModalState } from "@/atoms/auth-modal-atom";
 import Logout from "../buttons/logout";
+import Image from "next/image";
 
 type TopbarProps = {};
 
@@ -18,7 +19,7 @@ const Topbar: React.FC<TopbarProps> = () => {
         className={`flex w-full items-center justify-between max-w-[1200px] mx-auto`}
       >
         <Link href="/" className="h-[22px] flex-1">
-          <img src="/logo-full.png" alt="Logo" className="h-full" />
+          <Image src="/logo-full.png" alt="Logo" width={100} height={100} />
         </Link>
 
         <div className="flex items-center space-x-4 flex-1 justify-end">
@@ -46,10 +47,12 @@ const Topbar: React.FC<TopbarProps> = () => {
           )}
           {user && (
             <div className="cursor-pointer group relative">
-              <img
+              <Image
                 src="/avatar.png"
                 alt="user profile img"
-                className="h-8 w-8 rounded-full"
+                className="rounded-full"
+                width={35}
+                height={35}
               />
               <div
                 className="absolute top-10 left-2/4 -translate-x-2/4  mx-auto bg-dark-layer-1 text-brand-orange p-2 rounded shadow-lg 
