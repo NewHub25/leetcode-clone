@@ -1,10 +1,10 @@
 export type Problem = {
   id: string;
   title: string;
-  difficulty: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
   category: string;
   order: number;
-  videoId?: string;
+  videoId: string;
 };
 
 export const problems: Problem[] = [
