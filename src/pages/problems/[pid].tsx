@@ -6,7 +6,7 @@ type ProblemPageProps = {};
 const ProblemPage: React.FC<ProblemPageProps> = () => {
   return (
     <div>
-      <Topbar />
+      <Topbar problemPage={true} />
     </div>
   );
 };
