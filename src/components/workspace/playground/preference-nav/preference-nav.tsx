@@ -1,4 +1,5 @@
 import React from "react";
+import { AiOutlineFullscreen, AiOutlineSetting } from "react-icons/ai";
 
 type PreferenceNavProps = {};
 
@@ -12,6 +13,20 @@ const PreferenceNav: React.FC<PreferenceNavProps> = () => {
               JavaScript
             </div>
           </div>
+        </button>
+      </div>
+      <div className="flex items-center m-2">
+        <button className="preferenceBtn group">
+          <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
+            <AiOutlineSetting />
+          </div>
+          <div className="preferenceBtnTooltip">Settings</div>
+        </button>
+        <button className="preferenceBtn group">
+          <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
+            <AiOutlineFullscreen />
+          </div>
+          <div className="preferenceBtnTooltip">Full screen</div>
         </button>
       </div>
     </div>
