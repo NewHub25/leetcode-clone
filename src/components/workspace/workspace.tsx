@@ -6,7 +6,7 @@ type WorkspaceProps = {};
 
 const Workspace: React.FC<WorkspaceProps> = () => {
   return (
-    <Split className="split">
+    <Split className="split" minSize={0}>
       <ProblemDescription />
       <div>Code editor gonna be here</div>
     </Split>
