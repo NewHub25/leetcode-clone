@@ -10,7 +10,7 @@ type PlaygroundProps = {};
 
 const Playground: React.FC<PlaygroundProps> = () => {
   return (
-    <div className="flex flex-col bg-dark-layer-1 relative">
+    <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">
       <PreferenceNav />
       <Split
         className="h-[calc(100vh-94px)]"
