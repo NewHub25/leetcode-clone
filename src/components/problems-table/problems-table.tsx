@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { problems } from "@/mockProblems/problems";
 import { BsCheckCircle } from "react-icons/bs";
 import { AiFillYoutube } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
 import YouTube from "react-youtube";
+import useGetProblems from "@/hooks/use-get-problems";
 
 type ProblemsTableProps = {
-  setLoadingProblems?: React.Dispatch<React.SetStateAction<boolean>>
+  setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const ProblemsTable: React.FC<ProblemsTableProps> = ({setLoadingProblems}) => {
@@ -15,6 +15,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({setLoadingProblems}) => {
     isOpen: false,
     videoId: "",
   });
+  const problems = useGetProblems(setLoadingProblems);
 
   const closeModal = () => {
     setYoutubePlayer({ isOpen: false, videoId: "" });
@@ -61,7 +62,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({setLoadingProblems}) => {
                     fontSize="30"
                     className="cursor-pointer hover:text-red-600"
                     onClick={() =>
-                      setYoutubePlayer({ isOpen: true, videoId: doc.videoId })
+                      setYoutubePlayer({ isOpen: true, videoId: doc.videoId as string })
                     }
                   />
                 ) : (
