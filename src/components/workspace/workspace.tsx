@@ -2,14 +2,19 @@ import React from "react";
 import Split from "react-split";
 import ProblemDescription from "./problem-description/problem-description";
 import Playground from "./playground/playground";
+import { type Problem } from "@/utils/types/problem";
 
-type WorkspaceProps = {};
+type WorkspaceProps = {
+  problem:Problem
+};
 
-const Workspace: React.FC<WorkspaceProps> = () => {
+const Workspace: React.FC<WorkspaceProps> = ({problem}) => {
   return (
     <Split className="split" minSize={0}>
-      <ProblemDescription />
-      <Playground />
+      <ProblemDescription problem={problem} />
+      <div className="bg-dark-fill-2">
+        <Playground />
+      </div>
     </Split>
   );
 };
