@@ -7,10 +7,12 @@ import YouTube from "react-youtube";
 import useGetProblems from "@/hooks/use-get-problems";
 
 type ProblemsTableProps = {
-  setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>
+  setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ProblemsTable: React.FC<ProblemsTableProps> = ({setLoadingProblems}) => {
+const ProblemsTable: React.FC<ProblemsTableProps> = ({
+  setLoadingProblems,
+}) => {
   const [youtubePlayer, setYoutubePlayer] = useState({
     isOpen: false,
     videoId: "",
@@ -32,37 +34,41 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({setLoadingProblems}) => {
   return (
     <>
       <tbody className="text-white">
-        {problems.map((doc, index) => {
+        {problems.map((problem, index) => {
           const difficultyColor =
-            doc.difficulty === "Easy"
+            problem.difficulty === "Easy"
               ? "text-dark-green-s"
-              : doc.difficulty === "Medium"
+              : problem.difficulty === "Medium"
               ? "text-dark-yellow"
               : "text-dark-pink";
           return (
-            <tr className={index % 2 ? "bg-dark-layer-1" : ""} key={doc.id}>
+            <tr className={index % 2 ? "bg-dark-layer-1" : ""} key={problem.id}>
               <th className="px-2 py-4 font-medium whitespace-nowrap text-dark-green-s">
                 <BsCheckCircle fontSize="18" width="18" />
               </th>
               <td className="px-6 py-4">
                 <Link
-                  href={`/problems/${doc.id}`}
+                  href={problem.link ? problem.link : `/problems/${problem.id}`}
                   className="hover:text-blue-600 cursor-pointer"
+                  target={problem.link ? "_blank" : undefined}
                 >
-                  {doc.title}
+                  {problem.title}
                 </Link>
               </td>
               <td className={`px-6 py-4 ${difficultyColor}`}>
-                {doc.difficulty}
+                {problem.difficulty}
               </td>
-              <td className="px-6 py-4">{doc.category}</td>
+              <td className="px-6 py-4">{problem.category}</td>
               <td className="px-6 py-4">
-                {doc.videoId ? (
+                {problem.videoId ? (
                   <AiFillYoutube
                     fontSize="30"
                     className="cursor-pointer hover:text-red-600"
                     onClick={() =>
-                      setYoutubePlayer({ isOpen: true, videoId: doc.videoId as string })
+                      setYoutubePlayer({
+                        isOpen: true,
+                        videoId: problem.videoId as string,
+                      })
                     }
                   />
                 ) : (

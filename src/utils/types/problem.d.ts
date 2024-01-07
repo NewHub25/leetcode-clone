@@ -19,6 +19,7 @@ export type Problem = {
   starterFunctionName: string;
 };
 
+// remote problem data
 export type DBProblem = {
   id: string;
   title: string;
