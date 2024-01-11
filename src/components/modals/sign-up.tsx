@@ -2,8 +2,10 @@ import { authModalState } from "@/atoms/auth-modal-atom";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/firebase";
+import { auth, firestore } from "@/firebase/firebase";
 import { useRouter } from "next/router";
+import { doc, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 type SignUpProps = {};
 
@@ -29,14 +31,33 @@ const SignUp: React.FC<SignUpProps> = () => {
     if (!inputs.email || !inputs.displayName || !inputs.password)
       return alert("Please fill all fields");
     try {
+      toast.loading("Creating your account", {
+        position: "top-center",
+        toastId: "loadingToast",
+      });
       const newUser = await createUserWithEmailAndPassword(
         inputs.email,
         inputs.password
       );
       if (!newUser) return;
+
+      const userData = {
+        uid: newUser.user.uid,
+        email: newUser.user.email,
+        displayName: inputs.displayName,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        likedProblems: [],
+        dislikedProblems: [],
+        solvedProblems: [],
+        starredProblems: [],
+      };
+      await setDoc(doc(firestore, "users", newUser.user.uid), userData);
       router.push("/");
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message, { position: "top-center" });
+    } finally {
+      toast.dismiss("loadingToast");
     }
   };
 
@@ -116,9 +137,3 @@ const SignUp: React.FC<SignUpProps> = () => {
   );
 };
 export default SignUp;
-
-/**
- * ejemplo@gmail.com
- * Julio Torres
- * 12345678
- */
