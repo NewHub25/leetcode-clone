@@ -4,6 +4,8 @@ import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
 import useGetCurrentProblem from "@/hooks/use-get-current-problem";
+import RectangleSkeleton from "./../../skeletons/rectangle-skeleton";
+import CircleSkeleton from "./../../skeletons/circle-skeleton";
 
 type ProblemDescriptionProps = {
   problem: Problem;
