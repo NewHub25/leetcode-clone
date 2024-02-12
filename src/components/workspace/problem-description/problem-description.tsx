@@ -6,6 +6,10 @@ import { TiStarOutline } from "react-icons/ti";
 import useGetCurrentProblem from "@/hooks/use-get-current-problem";
 import RectangleSkeleton from "./../../skeletons/rectangle-skeleton";
 import CircleSkeleton from "./../../skeletons/circle-skeleton";
+import useGetUsersDataOnProblem from "@/hooks/use-get-users-data-on-problem";
+import { toast } from "react-toastify";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
 
 type ProblemDescriptionProps = {
   problem: Problem;
@@ -14,6 +18,19 @@ type ProblemDescriptionProps = {
 const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
   const { currentProblem, loading, problemDifficultyClass } =
     useGetCurrentProblem(problem.id);
+  const { liked, disliked, solved, starred, setData } =
+    useGetUsersDataOnProblem(problem.id);
+  const [user] = useAuthState(auth);
+
+  const handleLike = async () => {
+    if (!user) {
+      toast.error("You must be logged in to like a problem", {
+        position: "top-left",
+        theme: "dark",
+      });
+      return;
+    }
+  };
 
   return (
     <div className="bg-dark-layer-1">
@@ -47,8 +64,12 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                 <div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-s text-dark-green-s">
                   <BsCheck2Circle />
                 </div>
-                <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
-                  <AiFillLike />
+                <div
+                  className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-dark-gray-6"
+                  onClick={handleLike}
+                >
+                  {liked && <AiFillLike className="text-dark-blue-s" />}
+                  {!liked && <AiFillLike />}
                   <span className="text-xs">{currentProblem.likes}</span>
                 </div>
                 <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-green-s text-dark-gray-6">
