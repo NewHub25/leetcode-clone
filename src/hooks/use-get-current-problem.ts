@@ -26,5 +26,5 @@ export default function useGetCurrentProblem(problemId: Problem['id']) {
     getCurrentProblem();
   }, [problemId]);
 
-  return { currentProblem, loading, problemDifficultyClass };
+  return { currentProblem, setCurrentProblem, loading, problemDifficultyClass };
 };

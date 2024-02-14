@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { type Problem } from "@/utils/types/problem";
-import { AiFillDislike, AiFillLike } from "react-icons/ai";
+import {
+  AiFillDislike,
+  AiFillLike,
+  AiOutlineLoading3Quarters,
+} from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
 import useGetCurrentProblem from "@/hooks/use-get-current-problem";
@@ -9,18 +13,20 @@ import CircleSkeleton from "./../../skeletons/circle-skeleton";
 import useGetUsersDataOnProblem from "@/hooks/use-get-users-data-on-problem";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/firebase";
+import { auth, firestore } from "@/firebase/firebase";
+import { doc, runTransaction } from "firebase/firestore";
 
 type ProblemDescriptionProps = {
   problem: Problem;
 };
 
 const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
-  const { currentProblem, loading, problemDifficultyClass } =
+  const { currentProblem, setCurrentProblem, loading, problemDifficultyClass } =
     useGetCurrentProblem(problem.id);
   const { liked, disliked, solved, starred, setData } =
     useGetUsersDataOnProblem(problem.id);
   const [user] = useAuthState(auth);
+  const [updating, setUpdating] = useState(false);
 
   const handleLike = async () => {
     if (!user) {
@@ -30,6 +36,65 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
       });
       return;
     }
+    if (updating) return;
+    setUpdating(true);
+    // If already liked or disliked or neither
+    await runTransaction(firestore, async (transaction) => {
+      const userRef = doc(firestore, "users", user.uid);
+      const problemRef = doc(firestore, "problems", problem.id);
+      const userDoc = await transaction.get(userRef);
+      const problemDoc = await transaction.get(problemRef);
+      if (userDoc.exists() && problemDoc.exists()) {
+        if (liked) {
+          // Remove problem id from likedProblems on user document, decrement likes on user document
+          transaction.update(userRef, {
+            likedProblems: userDoc
+              .data()
+              .likedProblems.filter((id: string) => id !== problem.id),
+          });
+          transaction.update(problemRef, {
+            likes: problemDoc.data().likes - 1,
+          });
+          setCurrentProblem((prev) =>
+            prev ? { ...prev, likes: prev.likes - 1 } : null
+          );
+          setData((prev) => ({ ...prev, liked: false }));
+        } else if (disliked) {
+          transaction.update(userRef, {
+            likedProblems: [...userDoc.data().likedProblems, problem.id],
+            dislikedProblems: userDoc
+              .data()
+              .dislikedProblems.filter((id: string) => id !== problem.id),
+          });
+          transaction.update(problemRef, {
+            likes: problemDoc.data().likes + 1,
+            dislikes: problemDoc.data().dislikes - 1,
+          });
+          setCurrentProblem((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  likes: prev.likes + 1,
+                  dislikes: prev.dislikes - 1,
+                }
+              : null
+          );
+          setData((prev) => ({ ...prev, liked: true, disliked: false }));
+        } else {
+          transaction.update(userRef, {
+            likedProblems: [...userDoc.data().likedProblems, problem.id],
+          });
+          transaction.update(problemRef, {
+            likes: problemDoc.data().likes + 1,
+          });
+          setCurrentProblem((prev) =>
+            prev ? { ...prev, likes: prev.likes + 1 } : null
+          );
+          setData((prev) => ({ ...prev, liked: true }));
+        }
+      }
+    });
+    setUpdating(false);
   };
 
   return (
@@ -68,8 +133,13 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                   className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-dark-gray-6"
                   onClick={handleLike}
                 >
-                  {liked && <AiFillLike className="text-dark-blue-s" />}
-                  {!liked && <AiFillLike />}
+                  {liked && !updating && (
+                    <AiFillLike className="text-dark-blue-s" />
+                  )}
+                  {!liked && !updating && <AiFillLike />}
+                  {updating && (
+                    <AiOutlineLoading3Quarters className="animate-spin" />
+                  )}
                   <span className="text-xs">{currentProblem.likes}</span>
                 </div>
                 <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-green-s text-dark-gray-6">
