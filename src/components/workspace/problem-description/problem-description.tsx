@@ -97,6 +97,20 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
     setUpdating(false);
   };
 
+  const handleDislike = async () => {
+    if (!user) {
+      toast.error("You must be logged in to dislike a problem", {
+        position: "top-left",
+        theme: "dark",
+      });
+      return;
+    }
+    if (updating) return;
+    setUpdating(true);
+    // If already liked or disliked or neither
+    await runTransaction(firestore, async (transaction) => {});
+    setUpdating(false);
+  };
   return (
     <div className="bg-dark-layer-1">
       {/* TAB */}
@@ -142,8 +156,17 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                   )}
                   <span className="text-xs">{currentProblem.likes}</span>
                 </div>
-                <div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-green-s text-dark-gray-6">
-                  <AiFillDislike />
+                <div
+                  className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-green-s text-dark-gray-6"
+                  onClick={handleDislike}
+                >
+                  {disliked && !updating && (
+                    <AiFillDislike className="text-dark-blue-s" />
+                  )}
+                  {!disliked && !updating && <AiFillDislike />}
+                  {updating && (
+                    <AiOutlineLoading3Quarters className="animate-spin" />
+                  )}
                   <span className="text-xs">{currentProblem.dislikes}</span>
                 </div>
                 <div className="cursor-pointer hover:bg-dark-fill-3  rounded p-[3px]  ml-4 text-xl transition-colors duration-200 text-green-s text-dark-gray-6 ">
