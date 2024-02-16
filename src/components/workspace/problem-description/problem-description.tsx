@@ -14,7 +14,7 @@ import useGetUsersDataOnProblem from "@/hooks/use-get-users-data-on-problem";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestore } from "@/firebase/firebase";
-import { doc, runTransaction } from "firebase/firestore";
+import { type Transaction, doc, runTransaction } from "firebase/firestore";
 
 type ProblemDescriptionProps = {
   problem: Problem;
@@ -28,6 +28,14 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
   const [user] = useAuthState(auth);
   const [updating, setUpdating] = useState(false);
 
+  const returnUserDataAndProblemData = async (transaction: Transaction) => {
+    const userRef = doc(firestore, "users", user!.uid);
+    const problemRef = doc(firestore, "problems", problem.id);
+    const userDoc = await transaction.get(userRef);
+    const problemDoc = await transaction.get(problemRef);
+    return { userRef, userDoc, problemRef, problemDoc };
+  };
+
   const handleLike = async () => {
     if (!user) {
       toast.error("You must be logged in to like a problem", {
@@ -40,10 +48,9 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
     setUpdating(true);
     // If already liked or disliked or neither
     await runTransaction(firestore, async (transaction) => {
-      const userRef = doc(firestore, "users", user.uid);
-      const problemRef = doc(firestore, "problems", problem.id);
-      const userDoc = await transaction.get(userRef);
-      const problemDoc = await transaction.get(problemRef);
+      const { userRef, problemRef, userDoc, problemDoc } =
+        await returnUserDataAndProblemData(transaction);
+
       if (userDoc.exists() && problemDoc.exists()) {
         if (liked) {
           // Remove problem id from likedProblems on user document, decrement likes on user document
@@ -108,9 +115,63 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
     if (updating) return;
     setUpdating(true);
     // If already liked or disliked or neither
-    await runTransaction(firestore, async (transaction) => {});
+    await runTransaction(firestore, async (transaction) => {
+      const { userRef, problemRef, userDoc, problemDoc } =
+        await returnUserDataAndProblemData(transaction);
+
+      if (userDoc.exists() && problemDoc.exists()) {
+        if (disliked) {
+          transaction.update(userRef, {
+            dislikedProblems: userDoc
+              .data()
+              .dislikedProblems.filter((id: string) => id !== problem.id),
+          });
+          transaction.update(problemRef, {
+            dislikes: problemDoc.data().dislikes - 1,
+          });
+          setCurrentProblem((prev) =>
+            prev ? { ...prev, dislikes: prev.dislikes - 1 } : null
+          );
+          setData((prev) => ({ ...prev, disliked: false }));
+        } else if (liked) {
+          transaction.update(userRef, {
+            dislikedProblems: [...userDoc.data().dislikedProblems, problem.id],
+            likedProblems: userDoc
+              .data()
+              .likedProblems.filter((id: string) => id !== problem.id),
+          });
+          transaction.update(problemRef, {
+            dislikes: problemDoc.data().dislikes + 1,
+            likes: problemDoc.data().likes - 1,
+          });
+          setCurrentProblem((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  dislikes: prev.likes + 1,
+                  likes: prev.dislikes - 1,
+                }
+              : null
+          );
+          setData((prev) => ({ ...prev, disliked: true, liked: false }));
+        } else {
+          transaction.update(userRef, {
+            dislikedProblems: [...userDoc.data().dislikedProblems, problem.id],
+          });
+          transaction.update(problemRef, {
+            dislikes: problemDoc.data().dislikes + 1,
+          });
+          setCurrentProblem((prev) =>
+            prev ? { ...prev, dislikes: prev.dislikes + 1 } : null
+          );
+          setData((prev) => ({ ...prev, disliked: true }));
+        }
+      }
+    });
     setUpdating(false);
   };
+
+  const handleStar = async () => {};
   return (
     <div className="bg-dark-layer-1">
       {/* TAB */}
@@ -169,7 +230,10 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                   )}
                   <span className="text-xs">{currentProblem.dislikes}</span>
                 </div>
-                <div className="cursor-pointer hover:bg-dark-fill-3  rounded p-[3px]  ml-4 text-xl transition-colors duration-200 text-green-s text-dark-gray-6 ">
+                <div
+                  className="cursor-pointer hover:bg-dark-fill-3  rounded p-[3px]  ml-4 text-xl transition-colors duration-200 text-green-s text-dark-gray-6 "
+                  onClick={handleStar}
+                >
                   <TiStarOutline />
                 </div>
               </div>
