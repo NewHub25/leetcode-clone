@@ -3,6 +3,7 @@ import { type Problem } from "@/utils/types/problem";
 import {
   AiFillDislike,
   AiFillLike,
+  AiFillStar,
   AiOutlineLoading3Quarters,
 } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
@@ -14,7 +15,14 @@ import useGetUsersDataOnProblem from "@/hooks/use-get-users-data-on-problem";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestore } from "@/firebase/firebase";
-import { type Transaction, doc, runTransaction } from "firebase/firestore";
+import {
+  type Transaction,
+  doc,
+  runTransaction,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 
 type ProblemDescriptionProps = {
   problem: Problem;
@@ -148,8 +156,8 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
             prev
               ? {
                   ...prev,
-                  dislikes: prev.likes + 1,
-                  likes: prev.dislikes - 1,
+                  dislikes: prev.dislikes + 1,
+                  likes: prev.likes - 1,
                 }
               : null
           );
@@ -171,7 +179,31 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
     setUpdating(false);
   };
 
-  const handleStar = async () => {};
+  const handleStar = async () => {
+    if (!user) {
+      toast.error("You must be logged in to star a problem", {
+        position: "top-left",
+        theme: "dark",
+      });
+      return;
+    }
+    if (updating) return;
+    setUpdating(true);
+    const userRef = doc(firestore, "users", user.uid);
+    if (!starred) {
+      await updateDoc(userRef, {
+        starredProblems: arrayUnion(problem.id),
+      });
+      setData((prev) => ({ ...prev, starred: true }));
+    } else {
+      await updateDoc(userRef, {
+        starredProblems: arrayRemove(problem.id),
+      });
+      setData((prev) => ({ ...prev, starred: false }));
+    }
+    setUpdating(false);
+  };
+
   return (
     <div className="bg-dark-layer-1">
       {/* TAB */}
@@ -201,9 +233,11 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                 >
                   {currentProblem.difficulty}
                 </div>
-                <div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-s text-dark-green-s">
-                  <BsCheck2Circle />
-                </div>
+                {solved && (
+                  <div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-s text-dark-green-s">
+                    <BsCheck2Circle />
+                  </div>
+                )}
                 <div
                   className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-dark-gray-6"
                   onClick={handleLike}
@@ -234,7 +268,13 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                   className="cursor-pointer hover:bg-dark-fill-3  rounded p-[3px]  ml-4 text-xl transition-colors duration-200 text-green-s text-dark-gray-6 "
                   onClick={handleStar}
                 >
-                  <TiStarOutline />
+                  {starred && !updating && (
+                    <AiFillStar className="text-dark-yellow" />
+                  )}
+                  {!starred && !updating && <TiStarOutline />}
+                  {updating && (
+                    <AiOutlineLoading3Quarters className="animate-spin" />
+                  )}
                 </div>
               </div>
             )}
