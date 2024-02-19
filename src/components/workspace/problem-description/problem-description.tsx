@@ -229,7 +229,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
             {!loading && currentProblem && (
               <div className="flex items-center mt-3">
                 <div
-                  className={`${problemDifficultyClass} inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize `}
+                  className={`inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize ${problemDifficultyClass}`}
                 >
                   {currentProblem.difficulty}
                 </div>

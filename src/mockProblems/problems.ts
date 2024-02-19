@@ -7,7 +7,7 @@ type Problem = {
   videoId: string;
 };
 
-export const problems: Problem[] = [
+const problems: Problem[] = [
   {
     id: "two-sum",
     title: "Two Sum",

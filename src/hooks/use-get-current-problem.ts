@@ -18,7 +18,7 @@ export default function useGetCurrentProblem(problemId: Problem['id']) {
         const problem = docSnap.data() as DBProblem;
         setCurrentProblem({ ...problem });
         setProblemDifficultyClass(
-          problem.difficulty == 'Easy' ? 'bg-olive text-olive' : problem.difficulty == 'Medium' ? 'bg-yellow text-dark-yellow' : 'bg-dark-pink text-dark-pink'
+          problem.difficulty === 'Easy' ? 'bg-olive text-olive' : problem.difficulty === 'Medium' ? 'bg-yellow text-dark-yellow' : 'bg-dark-pink text-dark-pink'
         );
       }
       setLoading(false);
