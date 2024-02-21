@@ -1,10 +1,14 @@
 import ProblemsTable from "@/components/problems-table/problems-table";
 import Topbar from "@/components/topbar/topbar";
 import { useState } from "react";
-import LoadingSkeleton from './../components/skeletons/loading-skeleton'
+import LoadingSkeleton from "./../components/skeletons/loading-skeleton";
+import useHasMounted from "@/hooks/use-has-mounted";
 
 export default function Home() {
   const [loadingProblems, setLoadingProblems] = useState(true);
+  const hasMounted = useHasMounted();
+
+  if (!hasMounted) return null;
 
   return (
     <main className="bg-dark-layer-2 min-h-screen">
@@ -54,4 +58,3 @@ export default function Home() {
     </main>
   );
 }
-
