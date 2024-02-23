@@ -9,6 +9,8 @@ import { type Problem } from "@/utils/types/problem";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/firebase";
 import { toast } from "react-toastify";
+import { problems } from "@/utils/problems";
+import { useRouter } from "next/router";
 
 type PlaygroundProps = {
   problem: Problem;
@@ -19,6 +21,9 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess }) => {
   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
   const [userCode, setUserCode] = useState(problem.starterCode);
   const [user] = useAuthState(auth);
+  const {
+    query: { pid },
+  } = useRouter();
 
   const handleSubmit = () => {
     if (!user) {
@@ -29,7 +34,40 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess }) => {
       });
       return;
     }
-    
+    try {
+      const cb: any = new Function(`return ${userCode}`)();
+      const success = problems[pid as string].handlerFunction(cb);
+      if (success) {
+        toast.success("Congrats! All tests passed!", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+        }, 4000);
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (
+        error.message.startsWith(
+          "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:"
+        )
+      ) {
+        toast.error("Oops! One or more tests failed", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      } else {
+        toast.error(error.message, {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      }
+    }
   };
   const onChange = (value: string) => {
     setUserCode(value);

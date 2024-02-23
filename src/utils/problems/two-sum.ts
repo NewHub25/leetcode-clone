@@ -36,7 +36,7 @@ const handlerTwoSum = (fn: any) => {
 export const twoSum: Problem = {
   id: "two-sum",
   title: "1. Two Sum",
-  problemStatement: `<p class='mt-3'>Given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers such that they add up to</em> <code>target</code>.</p><p class='mt-3'>  You may assume that each input would have <strong>exactly one solution</strong>, and you may not use thesame element twice.</p><p class='mt-3'>You can return  the answer in any order.</p>`,
+  problemStatement: `<p class='mt-3'>Given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers such that they add up to</em> <code>target</code>.</p><p class='mt-3'>  You may assume that each input would have <strong>exactly one solution</strong>, and you may not use the same element twice.</p><p class='mt-3'>You can return  the answer in any order.</p>`,
   examples: [
     {
       id: 1,
