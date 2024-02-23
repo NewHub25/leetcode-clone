@@ -7,10 +7,11 @@ import { javascript } from "@codemirror/lang-javascript";
 import EditorFooter from "./editor-footer/editor-footer";
 import { type Problem } from "@/utils/types/problem";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/firebase";
+import { auth, firestore } from "@/firebase/firebase";
 import { toast } from "react-toastify";
 import { problems } from "@/utils/problems";
 import { useRouter } from "next/router";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 type PlaygroundProps = {
   problem: Problem;
@@ -25,7 +26,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess }) => {
     query: { pid },
   } = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!user) {
       toast.error("Please login to submit your code", {
         position: "top-center",
@@ -47,6 +48,12 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess }) => {
         setTimeout(() => {
           setSuccess(false);
         }, 4000);
+
+        // Save the problem id in db
+        const useRef = doc(firestore, "users", user.uid);
+        await updateDoc(useRef, {
+          solvedProblems: arrayUnion(pid),
+        });
       }
     } catch (error: any) {
       console.log(error);
