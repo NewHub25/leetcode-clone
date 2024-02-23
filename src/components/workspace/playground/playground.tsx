@@ -6,13 +6,34 @@ import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import EditorFooter from "./editor-footer/editor-footer";
 import { type Problem } from "@/utils/types/problem";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
+import { toast } from "react-toastify";
 
 type PlaygroundProps = {
   problem: Problem;
+  setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Playground: React.FC<PlaygroundProps> = ({ problem }) => {
+const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess }) => {
   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
+  const [userCode, setUserCode] = useState(problem.starterCode);
+  const [user] = useAuthState(auth);
+
+  const handleSubmit = () => {
+    if (!user) {
+      toast.error("Please login to submit your code", {
+        position: "top-center",
+        theme: "dark",
+        autoClose: 3000,
+      });
+      return;
+    }
+    
+  };
+  const onChange = (value: string) => {
+    setUserCode(value);
+  };
 
   return (
     <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">
@@ -26,6 +47,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem }) => {
         <div className="w-full overflow-auto">
           <ReactCodeMirror
             value={problem.starterCode}
+            onChange={onChange}
             theme={vscodeDark}
             extensions={[javascript()]}
             style={{ fontSize: 16 }}
@@ -80,7 +102,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem }) => {
           </div>
         </div>
       </Split>
-      <EditorFooter />
+      <EditorFooter handleSubmit={handleSubmit} />
     </div>
   );
 };
