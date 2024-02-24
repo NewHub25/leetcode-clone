@@ -3,12 +3,17 @@ import Topbar from "@/components/topbar/topbar";
 import Workspace from "@/components/workspace/workspace";
 import { type Problem } from "@/utils/types/problem";
 import { problems } from "@/utils/problems";
+import useHasMounted from "@/hooks/use-has-mounted";
 
 type ProblemPageProps = {
   problem: Problem;
 };
 
 const ProblemPage: React.FC<ProblemPageProps> = ({ problem }) => {
+  const hasMounted = useHasMounted();
+  
+  if (!hasMounted) return null;
+
   return (
     <div>
       <Topbar problemPage />
