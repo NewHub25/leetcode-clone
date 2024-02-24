@@ -16,9 +16,14 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 type PlaygroundProps = {
   problem: Problem;
   setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess }) => {
+const Playground: React.FC<PlaygroundProps> = ({
+  problem,
+  setSuccess,
+  setSolved,
+}) => {
   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
   const [userCode, setUserCode] = useState(problem.starterCode);
   const [user] = useAuthState(auth);
@@ -54,6 +59,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess }) => {
         await updateDoc(useRef, {
           solvedProblems: arrayUnion(pid),
         });
+        setSolved(true);
       }
     } catch (error: any) {
       console.log(error);

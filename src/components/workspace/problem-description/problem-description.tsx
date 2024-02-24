@@ -26,9 +26,13 @@ import {
 
 type ProblemDescriptionProps = {
   problem: Problem;
+  _solved: boolean;
 };
 
-const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
+const ProblemDescription: React.FC<ProblemDescriptionProps> = ({
+  problem,
+  _solved,
+}) => {
   const { currentProblem, setCurrentProblem, loading, problemDifficultyClass } =
     useGetCurrentProblem(problem.id);
   const { liked, disliked, solved, starred, setData } =
@@ -230,10 +234,11 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
               <div className="flex items-center mt-3">
                 <div
                   className={`inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize ${problemDifficultyClass}`}
+                  onClick={() => console.log(problemDifficultyClass)}
                 >
                   {currentProblem.difficulty}
                 </div>
-                {solved && (
+                {(solved || _solved) && (
                   <div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-s text-dark-green-s">
                     <BsCheck2Circle />
                   </div>
