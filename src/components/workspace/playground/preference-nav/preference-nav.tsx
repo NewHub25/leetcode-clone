@@ -1,9 +1,25 @@
-import React from "react";
-import { AiOutlineFullscreen, AiOutlineSetting } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import {
+  AiOutlineFullscreen,
+  AiOutlineFullscreenExit,
+  AiOutlineSetting,
+} from "react-icons/ai";
 
 type PreferenceNavProps = {};
 
 const PreferenceNav: React.FC<PreferenceNavProps> = () => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const handleFullScreen = () => {
+    if (isFullScreen) {
+      document.exitFullscreen();
+      setIsFullScreen(false);
+    } else {
+      document.documentElement.requestFullscreen();
+      setIsFullScreen(true);
+    }
+  };
+
   return (
     <div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full ">
       <div className="flex items-center text-white">
@@ -22,9 +38,13 @@ const PreferenceNav: React.FC<PreferenceNavProps> = () => {
           </div>
           <div className="preferenceBtnTooltip">Settings</div>
         </button>
-        <button className="preferenceBtn group">
+        <button className="preferenceBtn group" onClick={handleFullScreen}>
           <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
-            <AiOutlineFullscreen />
+            {!isFullScreen ? (
+              <AiOutlineFullscreen />
+            ) : (
+              <AiOutlineFullscreenExit />
+            )}
           </div>
           <div className="preferenceBtnTooltip">Full screen</div>
         </button>
