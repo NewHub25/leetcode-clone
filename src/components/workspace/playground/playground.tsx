@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PreferenceNav from "./preference-nav/preference-nav";
 import Split from "react-split";
 import ReactCodeMirror from "@uiw/react-codemirror";
@@ -84,7 +84,17 @@ const Playground: React.FC<PlaygroundProps> = ({
   };
   const onChange = (value: string) => {
     setUserCode(value);
+    localStorage.setItem(`code-${pid}`, JSON.stringify(value));
   };
+
+  useEffect(() => {
+    const code = localStorage.getItem(`code-${pid}`);
+    if (user) {
+      setUserCode(code ? JSON.parse(code) : problem.starterCode);
+    } else {
+      setUserCode(problem.starterCode);
+    }
+  }, [pid, user, problem.starterCode]);
 
   return (
     <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">
@@ -97,7 +107,7 @@ const Playground: React.FC<PlaygroundProps> = ({
       >
         <div className="w-full overflow-auto">
           <ReactCodeMirror
-            value={problem.starterCode}
+            value={userCode}
             onChange={onChange}
             theme={vscodeDark}
             extensions={[javascript()]}
