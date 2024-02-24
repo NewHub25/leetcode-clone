@@ -1,4 +1,4 @@
-export type Example = {
+type Example = {
   id: number;
   inputText: string;
   outputText: string;

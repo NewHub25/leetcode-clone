@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { problems } from "@/utils/problems";
 import { useRouter } from "next/router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { type ISetting } from "@/utils/types/settings";
 
 type PlaygroundProps = {
   problem: Problem;
@@ -30,6 +31,11 @@ const Playground: React.FC<PlaygroundProps> = ({
   const {
     query: { pid },
   } = useRouter();
+  const [setting, setSetting] = useState<ISetting>({
+    settingModalIsOpen: false,
+    fontSize: "16px",
+    dropdownIsOpen: false,
+  });
 
   const handleSubmit = async () => {
     if (!user) {
@@ -103,7 +109,7 @@ const Playground: React.FC<PlaygroundProps> = ({
 
   return (
     <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">
-      <PreferenceNav />
+      <PreferenceNav setting={setting} setSetting={setSetting} />
       <Split
         className="h-[calc(100vh-94px)]"
         direction="vertical"
@@ -116,7 +122,7 @@ const Playground: React.FC<PlaygroundProps> = ({
             onChange={onChange}
             theme={vscodeDark}
             extensions={[javascript()]}
-            style={{ fontSize: 16 }}
+            style={{ fontSize: setting.fontSize }}
           />
         </div>
         <div className="w-full px-5 overflow-auto">
