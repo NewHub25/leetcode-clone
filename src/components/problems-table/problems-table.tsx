@@ -5,6 +5,7 @@ import { AiFillYoutube } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
 import YouTube from "react-youtube";
 import useGetProblems from "@/hooks/use-get-problems";
+import useGetSolvedProblems from "@/hooks/use-get-solved-problems";
 
 type ProblemsTableProps = {
   setLoadingProblems: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,6 +19,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({
     videoId: "",
   });
   const problems = useGetProblems(setLoadingProblems);
+  const solvedProblems = useGetSolvedProblems();
 
   const closeModal = () => {
     setYoutubePlayer({ isOpen: false, videoId: "" });
@@ -44,7 +46,9 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({
           return (
             <tr className={index % 2 ? "bg-dark-layer-1" : ""} key={problem.id}>
               <th className="px-2 py-4 font-medium whitespace-nowrap text-dark-green-s">
-                <BsCheckCircle fontSize="18" width="18" />
+                {solvedProblems.includes(problem.id) && (
+                  <BsCheckCircle fontSize="18" width="18" />
+                )}
               </th>
               <td className="px-6 py-4">
                 <Link
