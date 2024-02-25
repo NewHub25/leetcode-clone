@@ -13,6 +13,7 @@ import { problems } from "@/utils/problems";
 import { useRouter } from "next/router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { type ISetting } from "@/utils/types/settings";
+import useLocalStorage from "@/hooks/use-local-storage";
 
 type PlaygroundProps = {
   problem: Problem;
@@ -31,9 +32,10 @@ const Playground: React.FC<PlaygroundProps> = ({
   const {
     query: { pid },
   } = useRouter();
+  const [fontSize, setFontSize] = useLocalStorage("lcc-font-size", "16px");
   const [setting, setSetting] = useState<ISetting>({
     settingModalIsOpen: false,
-    fontSize: "16px",
+    fontSize: fontSize,
     dropdownIsOpen: false,
   });
 

@@ -1,3 +1,4 @@
+import useLocalStorage from "@/hooks/use-local-storage";
 import { ISetting } from "@/utils/types/settings";
 import React from "react";
 import { BsCheckLg, BsChevronDown } from "react-icons/bs";
@@ -20,13 +21,16 @@ type SettingModalProps = {
 interface SettingsListItemProps {
   fontSize: string;
   selectedOption: string;
+  handleFontSizeChange: () => void;
 }
 
-const SettingModal: React.FC<SettingModalProps> = ({setting, setSetting}) => {
-  const handleClickDropdown = ()=>{
-    setSetting(prev => ({...prev, dropdownIsOpen: !prev.dropdownIsOpen}));
+const SettingModal: React.FC<SettingModalProps> = ({ setting, setSetting }) => {
+  const [_, setFontSize] = useLocalStorage("lcc-font-size", "16px");
+
+  const handleClickDropdown = () => {
+    setSetting((prev) => ({ ...prev, dropdownIsOpen: !prev.dropdownIsOpen }));
   };
-  
+
   return (
     <div className="text-white z-40">
       <div
@@ -36,7 +40,12 @@ const SettingModal: React.FC<SettingModalProps> = ({setting, setSetting}) => {
       >
         <div className="flex min-h-screen items-center justify-center px-4">
           {/* overlay */}
-          <div className="opacity-100" onClick={() => setSetting({...setting, settingModalIsOpen: false})}>
+          <div
+            className="opacity-100"
+            onClick={() =>
+              setSetting({ ...setting, settingModalIsOpen: false })
+            }
+          >
             <div className="fixed inset-0 bg-gray-8 opacity-60"></div>
           </div>
 
@@ -46,7 +55,9 @@ const SettingModal: React.FC<SettingModalProps> = ({setting, setSetting}) => {
               Settings
               <button
                 className="ml-auto cursor-pointer rounded transition-all"
-                onClick={() => setSetting({...setting, settingModalIsOpen:false})}
+                onClick={() =>
+                  setSetting({ ...setting, settingModalIsOpen: false })
+                }
               >
                 <IoClose />
               </button>
@@ -67,7 +78,7 @@ const SettingModal: React.FC<SettingModalProps> = ({setting, setSetting}) => {
                       className="flex cursor-pointer items-center rounded px-3 py-1.5 text-left focus:outline-none whitespace-nowrap bg bg-dark-fill-3 hover:bg-dark-fill-2 active:bg-dark-fill-3 w-full justify-between"
                       type="button"
                     >
-                      14px
+                      {setting.fontSize}
                       <BsChevronDown />
                     </button>
                     {/* Show dropdown for fontsizes */}
@@ -79,11 +90,18 @@ const SettingModal: React.FC<SettingModalProps> = ({setting, setSetting}) => {
                             "drop-shadow(rgba(0, 0, 0, 0.04) 0px 1px 3px) drop-shadow(rgba(0, 0, 0, 0.12) 0px 6px 16px)",
                         }}
                       >
-                        {EDITOR_FONT_SIZES.map((fontSize, idx) => (
+                        {EDITOR_FONT_SIZES.map((fontSizeItem, idx) => (
                           <SettingListItem
                             key={idx}
-                            fontSize={fontSize}
-                            selectedOption={"14px"}
+                            fontSize={fontSizeItem}
+                            selectedOption={setting.fontSize}
+                            handleFontSizeChange={() => {
+                              setFontSize(fontSizeItem);
+                              setSetting({
+                                ...setting,
+                                fontSize: fontSizeItem,
+                              });
+                            }}
                           />
                         ))}
                       </ul>
@@ -103,9 +121,13 @@ export default SettingModal;
 const SettingListItem: React.FC<SettingsListItemProps> = ({
   fontSize,
   selectedOption,
+  handleFontSizeChange,
 }) => {
   return (
-    <li className="relative flex h-8 cursor-pointer select-none py-1.5 pl-2 text-label-2 dark:text-dark-label-2 hover:bg-dark-fill-3 rounded-lg">
+    <li
+      className="relative flex h-8 cursor-pointer select-none py-1.5 pl-2 text-label-2 dark:text-dark-label-2 hover:bg-dark-fill-3 rounded-lg"
+      onClick={handleFontSizeChange}
+    >
       <div
         className={`flex h-5 flex-1 items-center pr-2 ${
           selectedOption === fontSize ? "font-medium" : ""
