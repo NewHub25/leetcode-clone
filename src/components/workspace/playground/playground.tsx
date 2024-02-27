@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { type ISetting } from "@/utils/types/settings";
 import useLocalStorage from "@/hooks/use-local-storage";
+import useGetUsersDataOnProblem from "@/hooks/use-get-users-data-on-problem";
 
 type PlaygroundProps = {
   problem: Problem;
@@ -32,12 +33,13 @@ const Playground: React.FC<PlaygroundProps> = ({
   const {
     query: { pid },
   } = useRouter();
-  const [fontSize, setFontSize] = useLocalStorage("lcc-font-size", "16px");
+  const [fontSize, _] = useLocalStorage("lcc-font-size", "16px");
   const [setting, setSetting] = useState<ISetting>({
     settingModalIsOpen: false,
     fontSize: fontSize,
     dropdownIsOpen: false,
   });
+  const { solved } = useGetUsersDataOnProblem(problem.id);
 
   const handleSubmit = async () => {
     if (!user) {
@@ -108,6 +110,12 @@ const Playground: React.FC<PlaygroundProps> = ({
       setUserCode(problem.starterCode);
     }
   }, [pid, user, problem.starterCode]);
+
+  useEffect(() => {
+    if (!solved) {
+      setSolved(false);
+    }
+  }, [solved, setSolved]);
 
   return (
     <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">

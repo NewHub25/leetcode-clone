@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function useLocalStorage(key: string, initialValue: string) {
-  const [value, setValue] = useState(() => {
+type LocalStorageType = [string, React.Dispatch<React.SetStateAction<string>>];
+
+export default function useLocalStorage(key: string, initialValue: string): LocalStorageType {
+  const [value, setValue] = useState<string>(() => {
     try {
       if (typeof window !== "undefined") {
         const item = window.localStorage.getItem(key);
