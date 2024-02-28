@@ -34,7 +34,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({
   problem,
   _solved,
 }) => {
-  const { currentProblem, setCurrentProblem, loading, problemDifficultyClass } =
+  const { currentProblem, setCurrentProblem, loading } =
     useGetCurrentProblem(problem.id);
   const { liked, disliked, solved, starred, setData } =
     useGetUsersDataOnProblem(problem.id);
@@ -240,8 +240,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({
             {!loading && currentProblem && (
               <div className="flex items-center mt-3">
                 <div
-                  className={`${problemDifficultyClass} inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize`}
-                  onClick={() => console.log(problemDifficultyClass)}
+                  className={`${currentProblem.difficulty === "Easy" ? "bg-olive text-olive" : (currentProblem.difficulty === "Medium" ? "bg-yellow text-dark-yellow" : "bg-dark-pink text-dark-pink")} inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize`}
                 >
                   {currentProblem.difficulty}
                 </div>

@@ -1,4 +1,4 @@
-import { auth } from "@/firebase/firebase";
+import { auth, firestore } from "@/firebase/firebase";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { problems } from "@/utils/problems";
 import ProfileModal from "../modals/profile-modal";
 import useGetAvatar from "@/hooks/use-get-avatar";
+import { doc, updateDoc } from "firebase/firestore";
 
 type TopbarProps = {
   problemPage?: boolean;
@@ -33,6 +34,12 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
     const nextProblemKey = listKeyProblems.at(nextProblemIndex);
     router.push(`/problems/${nextProblemKey}`);
   };
+  const changeAvatarDatabase = async (url: string) => {
+    const userRef = doc(firestore, "users", user!.uid);
+    await updateDoc(userRef, {
+      avatar_url: [url],
+    });
+  };
 
   return (
     <>
@@ -41,6 +48,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
           imageProfile={imageProfile}
           setImageProfile={setImageProfile}
           setOpenModalProfile={setOpenModalProfile}
+          changeAvatarDatabase={changeAvatarDatabase}
         />
       )}
       <nav className="relative flex h-[50px] w-full shrink-0 items-center px-5 bg-dark-layer-1 text-dark-gray-7">
@@ -106,10 +114,13 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
                 <Image
                   src={imageProfile}
                   alt="user profile image"
-                  className="rounded-full"
+                  className="rounded-full object-cover object-center"
                   width={35}
                   height={35}
-                  onClick={() => setOpenModalProfile(true)}
+                  onClick={() => {
+                    if (!localStorage.getItem("image-profile")) return;
+                    setOpenModalProfile(true);
+                  }}
                 />
                 <div
                   className="absolute top-10 left-2/4 -translate-x-2/4  mx-auto bg-dark-layer-1 text-brand-orange p-2 rounded shadow-lg 
