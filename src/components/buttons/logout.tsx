@@ -10,6 +10,7 @@ const Logout: React.FC<LogoutProps> = () => {
 
   const handleLogout = () => {
     signOut();
+    localStorage.removeItem("image-profile");
   };
 
   return (

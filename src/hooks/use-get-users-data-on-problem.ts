@@ -17,13 +17,12 @@ export default function useGetUsersDataOnProblem(problemId: string) {
       const userRef = doc(firestore, "users", user!.uid);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
-        const data = userSnap.data();
         const {
           likedProblems,
           dislikedProblems,
           solvedProblems,
           starredProblems,
-        } = data;
+        } = userSnap.data();
         setData({
           liked: likedProblems.includes(problemId),
           disliked: dislikedProblems.includes(problemId),
