@@ -72,6 +72,7 @@ const Playground: React.FC<PlaygroundProps> = ({
           const useRef = doc(firestore, "users", user.uid);
           await updateDoc(useRef, {
             solvedProblems: arrayUnion(pid),
+            updatedAt: Date.now(),
           });
           setSolved(true);
         }

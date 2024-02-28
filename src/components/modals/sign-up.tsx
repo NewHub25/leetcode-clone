@@ -6,6 +6,7 @@ import { auth, firestore } from "@/firebase/firebase";
 import { useRouter } from "next/router";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { UserDataType } from "@/utils/types/user-data";
 
 type SignUpProps = {};
 
@@ -41,7 +42,7 @@ const SignUp: React.FC<SignUpProps> = () => {
       );
       if (!newUser) return;
 
-      const userData = {
+      const userData: UserDataType = {
         uid: newUser.user.uid,
         email: newUser.user.email,
         displayName: inputs.displayName,
@@ -51,6 +52,7 @@ const SignUp: React.FC<SignUpProps> = () => {
         dislikedProblems: [],
         solvedProblems: [],
         starredProblems: [],
+        avatar_url: [],
       };
       await setDoc(doc(firestore, "users", newUser.user.uid), userData);
       router.push("/");

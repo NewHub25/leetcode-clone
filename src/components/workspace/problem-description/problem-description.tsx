@@ -43,6 +43,10 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({
 
   const returnUserDataAndProblemData = async (transaction: Transaction) => {
     const userRef = doc(firestore, "users", user!.uid);
+    //Update the user
+    await updateDoc(userRef, {
+      updatedAt: Date.now(),
+    });
     const problemRef = doc(firestore, "problems", problem.id);
     const userDoc = await transaction.get(userRef);
     const problemDoc = await transaction.get(problemRef);
@@ -198,11 +202,13 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({
     if (!starred) {
       await updateDoc(userRef, {
         starredProblems: arrayUnion(problem.id),
+        updatedAt: Date.now(),
       });
       setData((prev) => ({ ...prev, starred: true }));
     } else {
       await updateDoc(userRef, {
         starredProblems: arrayRemove(problem.id),
+        updatedAt: Date.now(),
       });
       setData((prev) => ({ ...prev, starred: false }));
     }
