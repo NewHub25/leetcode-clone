@@ -67,7 +67,7 @@ function getListValues(head: LinkedList): number[] {
 const starterCodeReverseLinkedListJS = `
 /**
  * Definition for singly-linked list:
-  function ListNode(val, next) {
+  function ListNode(value, next) {
     this.value = (value===undefined ? 0 : value)
     this.next = (next===undefined ? null : next)
   }
