@@ -117,10 +117,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
                   className="rounded-full object-cover object-center"
                   width={35}
                   height={35}
-                  onClick={() => {
-                    if (!localStorage.getItem("image-profile")) return;
-                    setOpenModalProfile(true);
-                  }}
+                  onClick={() => setOpenModalProfile(true)}
                 />
                 <div
                   className="absolute top-10 left-2/4 -translate-x-2/4  mx-auto bg-dark-layer-1 text-brand-orange p-2 rounded shadow-lg 
