@@ -66,11 +66,11 @@ function getListValues(head: LinkedList): number[] {
 
 const starterCodeReverseLinkedListJS = `
 /**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
+ * Definition for singly-linked list:
+  function ListNode(val, next) {
+    this.value = (value===undefined ? 0 : value)
+    this.next = (next===undefined ? null : next)
+  }
  */
 // Do not edit function name
 function reverseLinkedList(head) {
@@ -99,7 +99,7 @@ export const reverseLinkedList: Problem = {
 			outputText: "[1]",
 		},
 	],
-	constraints: `<li class='mt-2'>The number of nodes in the list is the range <code>[0, 5000]</code>.</li><li class='mt-2'><code>-5000 <= Node.val <= 5000</code></li>`,
+	constraints: `<li class='mt-2'>The number of nodes in the list is the range <code>[0, 5000]</code>.</li><li class='mt-2'><code>-5000 <= Node.value <= 5000</code></li>`,
 	starterCode: starterCodeReverseLinkedListJS,
 	handlerFunction: reverseLinkedListHandler,
 	starterFunctionName: "function reverseLinkedList(",
