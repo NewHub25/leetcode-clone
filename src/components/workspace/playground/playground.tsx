@@ -110,7 +110,7 @@ const Playground: React.FC<PlaygroundProps> = ({
     } else {
       setUserCode(problem.starterCode);
     }
-  }, [pid, user, problem.starterCode]);
+  }, [pid, user, problem.starterCode]); 
 
   useEffect(() => {
     if (!solved) {

@@ -75,7 +75,7 @@ const starterCodeReverseLinkedListJS = `
 // Do not edit function name
 function reverseLinkedList(head) {
   // Write your code here
-};`;
+}`;
 
 export const reverseLinkedList: Problem = {
 	id: "reverse-linked-list",

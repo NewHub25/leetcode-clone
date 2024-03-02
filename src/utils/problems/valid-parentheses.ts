@@ -18,7 +18,7 @@ export const validParenthesesHandler = (fn: any) => {
 
 const starterCodeValidParenthesesJS = `function validParentheses(s) {
   // Write your code here
-};`;
+}`;
 
 export const validParentheses: Problem = {
   id: "valid-parentheses",
