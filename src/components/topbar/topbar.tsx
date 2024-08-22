@@ -58,7 +58,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
           }`}
         >
           <Link href="/" className="h-[22px] flex-1">
-            <Image src="/logo-full.png" alt="Logo" width={100} height={100} />
+            <Image src="/logo.png" alt="Logo" width={100} height={100} />
           </Link>
           {problemPage && (
             <div className="flex items-center gap-4 flex-1 justify-center">
