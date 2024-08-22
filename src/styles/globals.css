@@ -47,17 +47,17 @@ body {
 
 /* Split */
 .split {
-	display: flex;
+  display: flex;
 	flex-direction: row;
 }
 
 .gutter {
-	background-color: rgb(26, 26, 26);
+  background-color: rgb(26, 26, 26);
 	background-repeat: no-repeat;
 	background-position: 50%;
 }
 .gutter:hover {
-	background-color: #0a84ff;
+  background-color: #0a84ff;
 }
 .gutter.gutter-horizontal {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
@@ -96,4 +96,7 @@ code {
 .example-card pre strong {
   color: white;
   font-size: 1rem;
+}
+.link-image-logo{
+  filter: drop-shadow(1px 1px 2px rgb(255 192 30));
 }
